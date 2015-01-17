@@ -5,51 +5,74 @@
 package main
 
 import (
+	"bytes"
+	"encoding/base64"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
-
-	flag "github.com/ogier/pflag"
 )
 
 var (
-	inFile  *string = flag.StringP("input", "i", "", "name of the input file")
-	outFile *string = flag.StringP("output", "o", "", "name of the output file; defaults to stdout")
+	inFile  *string = flag.String("input", "", "name of the input file")
+	outFile *string = flag.String("output", "", "name of the output file; defaults to stdout")
+
+	bin   *bool = flag.Bool("binary", false, "binary output")
+	octal *bool = flag.Bool("octal", false, "octal output")
+	hex   *bool = flag.Bool("hex", false, "hexadecimal output")
+	b64   *bool = flag.Bool("base64", false, "base64 output")
 )
 
-func usage() {
-	fmt.Fprintf(os.Stderr, "usage: catbyte [options]\n")
-	flag.PrintDefaults()
-	os.Exit(2)
-}
-
 func main() {
-	flag.Usage = usage
 	flag.Parse()
 
 	if flag.NFlag() == 0 {
-		usage()
+		flag.Usage()
 	}
 
 	if *inFile == "" {
 		log.Fatal("Enter an input file name")
 	}
 
-	rbytes, err := ioutil.ReadFile(*inFile)
+	readBytes, err := ioutil.ReadFile(*inFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	strbytes := fmt.Sprintf("%X", rbytes)
+	var outputBytes []byte
+	switch {
+	case *bin:
+		var buf bytes.Buffer
+		for b := range readBytes {
+			buf.Write([]byte(fmt.Sprintf("%b", b)))
+		}
+		outputBytes = buf.Bytes()
+
+	case *octal:
+		var buf bytes.Buffer
+		for b := range readBytes {
+			buf.Write([]byte(fmt.Sprintf("%o", b)))
+		}
+		outputBytes = buf.Bytes()
+
+	case *hex:
+		outputBytes = []byte(fmt.Sprintf("%X", readBytes))
+
+	case *b64:
+		outputBytes = []byte(base64.StdEncoding.EncodeToString(readBytes))
+
+	default:
+		log.Fatal("Select an output format")
+	}
 
 	if *outFile == "" {
-		fmt.Fprintf(os.Stdout, strbytes+"\n")
-		return
-	}
-
-	err = ioutil.WriteFile(*outFile, []byte(strbytes), 0600)
-	if err != nil {
-		log.Fatal(err)
+		os.Stdout.Write(outputBytes)
+		os.Stdout.Write([]byte("\n"))
+	} else {
+		err = ioutil.WriteFile(*outFile, []byte(outputBytes), 0600)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
