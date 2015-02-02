@@ -1,1 +1,1 @@
-FROM golang:onbuild
+FROM quay.io/jzelinskie/golang
