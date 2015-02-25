@@ -15,13 +15,13 @@ import (
 )
 
 var (
-	inFile  *string = flag.String("input", "", "name of the input file")
-	outFile *string = flag.String("output", "", "name of the output file; defaults to stdout")
+	inFile  = flag.String("input", "", "name of the input file")
+	outFile = flag.String("output", "", "name of the output file; defaults to stdout")
 
-	bin   *bool = flag.Bool("binary", false, "binary output")
-	octal *bool = flag.Bool("octal", false, "octal output")
-	hex   *bool = flag.Bool("hex", false, "hexadecimal output")
-	b64   *bool = flag.Bool("base64", false, "base64 output")
+	bin   = flag.Bool("binary", false, "binary output")
+	octal = flag.Bool("octal", false, "octal output")
+	hex   = flag.Bool("hex", false, "hexadecimal output")
+	b64   = flag.Bool("base64", false, "base64 output")
 )
 
 func main() {
