@@ -88,6 +88,11 @@ func main() {
 	r.HandleFunc("/upload", handlerFor500s(UploadHandler)).Name("image")
 	r.HandleFunc("/", handlerFor500s(HomeHandler)).Name("home")
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	http.Handle("/", r)
-	http.ListenAndServe(":5000", nil)
+	http.ListenAndServe(":"+port, nil)
 }
