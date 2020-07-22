@@ -1,0 +1,40 @@
+{{define "head"}}
+<title>catbyte</title>
+<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+<link href="/static/css/bootstrap.jumbotron.css" rel="stylesheet">
+{{end}}
+
+{{define "body"}}
+<div class="jumbotron masthead">
+  <div class="container">
+    <h1>catbyte</h1>
+    <p><small>turn stuff into bytes</small></p>
+    <ul class="masthead-links">
+    </ul>
+  </div>
+</div>
+  <center>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" id="file">
+      <br>
+      <div id="encoding-radio">
+        <input style="display:inline;" type="radio" name="encoding" value="hex" checked>
+        <label style="display:inline;" for="hex">hex</label>
+        <input style="display:inline;" type="radio" name="encoding" value="base64">
+        <label style="display:inline;" for="base64">base64</label>
+      </div>
+      <br>
+      <button class="btn" type="submit">upload</button>
+    </form>
+  </center>
+<footer class="footer">
+  <p>
+    catbyte is written by <a href="http://jzelinskie.com">Jimmy Zelinskie</a> and is licensed under a BSD-style license
+  </p>
+  <ul class="footer-links">
+    <li><a href="https://github.com/jzelinskie/catbyte/commits/master">changes</a></li>
+    <li class="muted">·</li>
+    <li><a href="http://golang.org">golang.org</a></li>
+  </ul>
+</footer>
+{{end}}
